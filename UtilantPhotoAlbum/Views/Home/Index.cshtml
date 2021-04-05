@@ -1,8 +1,50 @@
-﻿@{
+﻿@model List<UtilantInterviewTest.Models.User>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            @foreach (var user in Model)
+            {
+                foreach (var album in user.Albums)
+                {
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-title text-truncate font-weight-bold">@album.Title</div>
+                            <div class="card-title text-truncate font-weight-light">@user.Name</div>
+                            <img src="@album.Photos[0].ThumbnailUrl" />
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <div class="font-weight-bolder"><a href="mailto:@user.Email">@user.Email</a></div>
+                                    <address>
+                                        @user.Address.Street<br />
+                                        @if (!string.IsNullOrEmpty(@user.Address.Suite))
+                                        {
+                                            @user.Address.Suite <br />
+                                        }
+                                        @user.Address.City, @user.Address.ZipCode
+                                    </address>
+                                    @if (!string.IsNullOrEmpty(user.Phone))
+                                    {
+                                        @user.Phone<br /><br />
+                                    }
+                                </div>
+                                 @*
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                    </div>
+                                   <small class="text-muted">9 mins</small>
+                                </div>
+                                *@
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
 </div>

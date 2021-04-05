@@ -20,15 +20,11 @@ namespace UtilantInterviewTest.Controllers
             _photoAlbumApi = photoAlbumApi;
         }
 
-        //public HomeController(ILogger<HomeController> logger)
-        //{
-        //    _logger = logger;
-        //}
-
+        [HttpGet]
         public IActionResult Index()
         {
-            // show all albums
-            return View();
+            // show all albums  
+            return View(_photoAlbumApi.GetAllUserInfo());
         }
 
         public IActionResult Privacy()
