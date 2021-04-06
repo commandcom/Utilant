@@ -14,6 +14,7 @@ namespace UtilantInterviewTest.Services
     {
         private Uri _serviceUrl;
         private JsonSerializerOptions _serializerOptions;
+        private List<User> _userData;
 
         public PhotoAlbumApi(Uri serviceUrl)
         {
@@ -34,7 +35,8 @@ namespace UtilantInterviewTest.Services
         public List<Album> GetAlbums(int userId)
         {
             List<Album> albums = JsonSerializer.Deserialize<List<Album>>(
-                GetServiceData($"users/{userId}/albums").Content, _serializerOptions);
+                GetServiceData($"users/{userId}/albums").Content, _serializerOptions)
+                .OrderBy(a => a.Title).ToList();
 
             foreach (var album in albums)
             {
@@ -43,6 +45,13 @@ namespace UtilantInterviewTest.Services
 
             return albums;
         }
+
+        //public Album GetAlbum(int albumId)
+        //{
+        //    return JsonSerializer.Deserialize<Album>(
+        //        GetServiceData($"albums/{albumId}/photos").Content, _serializerOptions)
+        //        .OrderBy(p => p.Title).ToList();
+        //}
 
         /// <summary>
         /// Get all the photos associated with an album
@@ -53,13 +62,15 @@ namespace UtilantInterviewTest.Services
         public List<Photo> GetPhotos(int albumId)
         {
             return JsonSerializer.Deserialize<List<Photo>>(
-                GetServiceData($"albums/{albumId}/photos").Content, _serializerOptions);
+                GetServiceData($"albums/{albumId}/photos").Content, _serializerOptions)
+                .OrderBy(p => p.Title).ToList();
         }
 
         public List<Post> GetPosts(int userId)
         {
             return JsonSerializer.Deserialize<List<Post>>(
-                GetServiceData($"users/{userId}/posts").Content, _serializerOptions);
+                GetServiceData($"users/{userId}/posts").Content, _serializerOptions)
+                .OrderBy(p => p.Title).ToList();
         }
 
         /// <summary>
@@ -68,16 +79,22 @@ namespace UtilantInterviewTest.Services
         /// <returns>List of all users and their associated album and post information</returns>
         public List<User> GetAllUserInfo()
         {
-            var users = JsonSerializer.Deserialize<List<User>>(GetServiceData("users").Content, _serializerOptions);
-
-            foreach (var user in users)
+            if (_userData == null)
             {
-                // get all albums for this user
-                user.Albums = GetAlbums(user.Id);
-                user.Posts = GetPosts(user.Id);
+                var users = JsonSerializer.Deserialize<List<User>>(GetServiceData("users").Content, _serializerOptions)
+                    .OrderBy(u => u.Name).ToList();
+
+                foreach (var user in users)
+                {
+                    // get all albums for this user
+                    user.Albums = GetAlbums(user.Id);
+                    user.Posts = GetPosts(user.Id);
+                }
+
+                _userData = users;
             }
 
-            return users;
+            return _userData;
         }
         
         private IRestResponse GetServiceData(string uriPath)

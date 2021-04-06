@@ -21,10 +21,14 @@ namespace UtilantInterviewTest.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber = 1, int pageSize = 10)
         {
-            // show all albums  
-            return View(_photoAlbumApi.GetAllUserInfo());
+            var userData = _photoAlbumApi.GetAllUserInfo();
+            var page = userData.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            return View(page);
+
+            //return View(_photoAlbumApi.GetAllUserInfo().Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList());
         }
 
         public IActionResult Privacy()

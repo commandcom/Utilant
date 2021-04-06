@@ -1,0 +1,26 @@
+﻿@model UtilantInterviewTest.Models.Album
+
+@{
+    ViewData["Title"] = "Album Detail View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Model.Title</h1>
+
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            @foreach (var photo in Model.Photos)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img src="@photo.ThumbnailUrl" />
+                        <div class="card-body">
+                            <div class="card-text">@photo.Title</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

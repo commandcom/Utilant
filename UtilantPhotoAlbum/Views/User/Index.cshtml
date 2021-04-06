@@ -1,0 +1,53 @@
+﻿@model UtilantInterviewTest.Models.User
+
+@{
+    ViewData["Title"] = "User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>User Info</h1>
+
+<div class="row">
+    <div class="card text-white bg-secondary mb-3">
+        <div class="container my-4">
+            <div class="card-header">@Model.Name</div>
+            <div class="card-body">
+                <p class="card-text">
+                    <a href="mailto:@Model.Email">@Model.Email</a>
+                    <address>
+                        @Model.Address.Street<br />
+                        @if (!string.IsNullOrEmpty(@Model.Address.Suite))
+                        {
+                            @Model.Address.Suite <br />
+                        }
+                        @Model.Address.City, @Model.Address.ZipCode
+                    </address>
+                    @if (!string.IsNullOrEmpty(Model.Phone))
+                    {
+                        @Model.Phone<br /><br />
+                    }
+
+                    ID: @Model.Id<br />
+                    User name: @Model.UserName<br />
+                    Website: @Model.Website<br />
+                    # of albums: @Model.Albums.Count
+                </p>
+            </div>
+            <div class="card-header">Posts</div>
+            <h6 class="card-body">
+                <p class="card-text">
+                    <ul>
+                        @foreach (var post in Model.Posts)
+                        {
+                            <li><div class="card-subtitle mb-2 text-capitalize">@post.Title</div></li>
+                            <p class="fs-5 fw-light">@post.Body</p>
+                    }
+                    </ul>
+                </p>
+            </h6>
+        </div>
+    </div>
+</div>
+
+      
+
