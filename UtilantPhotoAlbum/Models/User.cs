@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UtilantInterviewTest.Models;
+using X.PagedList;
 
 namespace UtilantInterviewTest.Models
 {
@@ -18,7 +19,6 @@ namespace UtilantInterviewTest.Models
         Company Company
     )
     {
-        public List<Album> Albums{ get; set; }
         public List<Post> Posts { get; set; }
     }
 }

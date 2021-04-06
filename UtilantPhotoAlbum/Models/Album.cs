@@ -10,9 +10,9 @@ namespace UtilantInterviewTest.Models
         int Id,
         int UserId,
         string Title
-        
     )
     {
-        public List<Photo> Photos{ get; set; }
+        public User User { get; set; }
+        public List<Photo> Photos { get; set; }
     }
 }

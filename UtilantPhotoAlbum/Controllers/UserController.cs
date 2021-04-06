@@ -17,7 +17,7 @@ namespace PhotoAlbum.Controllers
         }
         public IActionResult Index(int id)
         {
-            return View(_photoAlbumApi.GetAllUserInfo().First(u => u.Id == id));
+            return View(_photoAlbumApi.GetUser(id));
         }
     }
 }

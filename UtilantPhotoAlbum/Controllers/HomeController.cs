@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UtilantInterviewTest.Models;
 using UtilantInterviewTest.Services;
+using X.PagedList;
 
 namespace UtilantInterviewTest.Controllers
 {
@@ -20,17 +21,9 @@ namespace UtilantInterviewTest.Controllers
             _photoAlbumApi = photoAlbumApi;
         }
 
-       
-        public IActionResult Index(int pageNumber = 1, int pageSize = 10)
+        public IActionResult Index(int page = 1, int pageSize = 10)
         {
-            return View(_photoAlbumApi.GetAllUserInfo());
-            
-            //return View(_photoAlbumApi.GetAllUserInfo().Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList());
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            return View(_photoAlbumApi.GetPagedAlbumInfo(page, pageSize)) ;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

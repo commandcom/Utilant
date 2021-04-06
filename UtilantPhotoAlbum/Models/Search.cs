@@ -22,14 +22,16 @@ namespace UtilantInterviewTest.Models
                 return null;
             }
 
-            // a little awkward to search since we don't have a database; we'll do two separate searchs and combine the results
+            // a little awkward since we're searching two different types of objects; we'll do two separate searchs and combine the results
             SearchResults results = new();
 
             results.SearchString = searchString;
+            // for searching purposes
+            searchString = searchString.ToLower();
 
-            results.Users = photoAlbumApi.GetAllUserInfo().Where(u => u.Name.ToLower().StartsWith(searchString.ToLower())).ToList();
-            results.Albums = photoAlbumApi.GetAllUserInfo().SelectMany(a => a.Albums).Where(a => a.Title.ToLower().StartsWith(searchString.ToLower())).ToList();
-
+            results.Users = photoAlbumApi.GetUsers().Where(u => u.Name.ToLower().StartsWith(searchString)).ToList();
+            results.Albums = photoAlbumApi.GetAlbums().Where(a => a.Title.ToLower().StartsWith(searchString)).ToList();
+            
             return results;
         }
     }

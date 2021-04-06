@@ -1,4 +1,9 @@
-﻿@model List<UtilantInterviewTest.Models.User>
+﻿@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Core;
+
+
+@model PagedList<Album>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -10,39 +15,45 @@
         <input type="submit" value="Search" class="btn btn-primary" />
     </p>
 </form>
+<div style="padding: 4px;">
+    @Html.PagedListPager(Model, page => Url.Action("index", new { page }), new PagedListRenderOptionsBase
+    {
+        DisplayLinkToIndividualPages = true,
+        DisplayPageCountAndCurrentLocation = false,
+        LiElementClasses = new string[] { "page-item"},
+        PageClasses = new string[] { "page-link" }
+    })
+</div>
 
 <div class="album py-5 bg-light">
     <div class="container">
         <div class="row">
-            @foreach (var user in Model)
+            @foreach (var album in Model)
             {
-                foreach (var album in user.Albums)
-                {
-                    <div class="col-md-4">
-                        <div class="card mb-4 shadow-sm">
-                            <div class="card-title text-truncate font-weight-bold"><a href="/album/index/@album.Id">@album.Title</a></div>
-                            <div class="card-title text-truncate font-weight-light"><a href="/user/index/@user.Id">@user.Name</a></div>
-                            <img src="@album.Photos[0].ThumbnailUrl" />
-                            <div class="card-body">
-                                <div class="card-text">
-                                    <div class="font-weight-bolder"><a href="mailto:@user.Email">@user.Email</a></div>
-                                    <address>
-                                        @user.Address.Street<br />
-                                        @if (!string.IsNullOrEmpty(@user.Address.Suite))
-                                        {
-                                            @user.Address.Suite <br />
-                                        }
-                                        @user.Address.City, @user.Address.ZipCode
-                                    </address>
-                                    @if (!string.IsNullOrEmpty(user.Phone))
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-title text-truncate font-weight-bold"><a href="/album/index/@album.Id">@album.Title</a></div>
+                        <div class="card-title text-truncate font-weight-light"><a href="/user/index/@album.User.Id">@album.User.Name</a></div>
+                        <img src="@album.Photos[0].ThumbnailUrl" />
+                        <div class="card-body">
+                            <div class="card-text">
+                                <div class="font-weight-bolder"><a href="mailto:@album.User.Email">@album.User.Email</a></div>
+                                <address>
+                                    @album.User.Address.Street<br />
+                                    @if (!string.IsNullOrEmpty(@album.User.Address.Suite))
                                     {
-                                        @user.Phone<br /><br />
+                                        @album.User.Address.Suite <br />
                                     }
-                                </div>
+                                    @album.User.Address.City, @album.User.Address.ZipCode
+                                </address>
+                                @if (!string.IsNullOrEmpty(album.User.Phone))
+                                {
+                                    @album.User.Phone<br /><br />
+                                }
                             </div>
                         </div>
                     </div>
-                }
+                </div>
             }
         </div>
     </div>

@@ -7,14 +7,16 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using UtilantInterviewTest.Models;
 using RestSharp;
+using X.PagedList;
+
 
 namespace UtilantInterviewTest.Services
 {
     public class PhotoAlbumApi : IPhotoAlbumApi
     {
-        private Uri _serviceUrl;
-        private JsonSerializerOptions _serializerOptions;
+        private List<Album> _albumData;
         private List<User> _userData;
+        private JsonSerializerOptions _serializerOptions;
 
         public PhotoAlbumApi(Uri serviceUrl)
         {
@@ -32,18 +34,63 @@ namespace UtilantInterviewTest.Services
         /// <param name="userId">ID of the user.</param>
         /// <returns>List of user's Albums</returns>
         /// See <see cref="GetUsers"/> to get user ID information.
-        public List<Album> GetAlbums(int userId)
+        public List<Album> GetAlbums(User user)
         {
             List<Album> albums = JsonSerializer.Deserialize<List<Album>>(
-                GetServiceData($"users/{userId}/albums").Content, _serializerOptions)
+                GetServiceData($"users/{user.Id}/albums").Content, _serializerOptions)
                 .OrderBy(a => a.Title).ToList();
 
             foreach (var album in albums)
             {
+                album.User = user;
                 album.Photos = GetPhotos(album.Id);
             }
 
             return albums;
+        }
+
+        public List<Album> GetAlbums()
+        {
+            if (_albumData == null)
+            {
+                // get data from service
+                GetPagedAlbumInfo();
+            }
+
+            return _albumData;
+        }
+
+            public Album GetAlbum(int id)
+        {
+            if (_albumData == null)
+            {
+                // get data from service
+                GetPagedAlbumInfo();
+            }
+
+            return _albumData.Single(a => a.Id == id);
+        }
+        public List<User> GetUsers()
+        {
+            // use the cached data if its available
+            if (_userData == null)
+            {
+                _userData = JsonSerializer.Deserialize<List<User>>(GetServiceData("users").Content, _serializerOptions)
+                   .OrderBy(u => u.Name).ToList();
+            }
+
+            return _userData;
+        }
+
+        public User GetUser(int id)
+        {
+            if (_albumData == null)
+            {
+                // get data from service
+                GetPagedAlbumInfo();
+            }
+
+            return _albumData.Where(a => a.User.Id == id).First().User;
         }
 
         /// <summary>
@@ -67,27 +114,25 @@ namespace UtilantInterviewTest.Services
         }
 
         /// <summary>
-        /// Gets all users in the system/database
+        /// Gets all album and user in the system/database. Results can be paged
         /// </summary>
         /// <returns>List of all users and their associated album and post information</returns>
-        public List<User> GetAllUserInfo()
+        public IPagedList<Album> GetPagedAlbumInfo(int pageNumber = 1, int pageSize = 10)
         {
-            if (_userData == null)
+            if (_albumData == null)
             {
-                var users = JsonSerializer.Deserialize<List<User>>(GetServiceData("users").Content, _serializerOptions)
-                    .OrderBy(u => u.Name).ToList();
+                _albumData = new();
 
-                foreach (var user in users)
+                GetUsers();
+
+                foreach (var user in _userData)
                 {
-                    // get all albums for this user
-                    user.Albums = GetAlbums(user.Id);
                     user.Posts = GetPosts(user.Id);
+                    _albumData.AddRange(GetAlbums(user));
                 }
-
-                _userData = users;
             }
-
-            return _userData;
+     
+            return _albumData.ToPagedList(pageNumber, pageSize);
         }
         
         private IRestResponse GetServiceData(string uriPath)
@@ -106,6 +151,6 @@ namespace UtilantInterviewTest.Services
         /// <summary>
         /// Address of the service
         /// </summary>
-        public Uri ServiceUrl { get => _serviceUrl; set => _serviceUrl = value; }
+        public Uri ServiceUrl { get; set; }
     }
 }
