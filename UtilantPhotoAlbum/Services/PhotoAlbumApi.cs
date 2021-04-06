@@ -46,13 +46,6 @@ namespace UtilantInterviewTest.Services
             return albums;
         }
 
-        //public Album GetAlbum(int albumId)
-        //{
-        //    return JsonSerializer.Deserialize<Album>(
-        //        GetServiceData($"albums/{albumId}/photos").Content, _serializerOptions)
-        //        .OrderBy(p => p.Title).ToList();
-        //}
-
         /// <summary>
         /// Get all the photos associated with an album
         /// </summary>

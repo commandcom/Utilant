@@ -1,0 +1,41 @@
+﻿@model UtilantInterviewTest.Models.SearchResults
+
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+<div id="content" class="container">
+    <div>Results for search: "@Model.SearchString"</div>
+    <p>&nbsp;</p>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h6 class="nomargin">
+                @Model.Users.Count users found
+            </h6>
+            <hr class="nomargin-bottom margin-top-10">
+            <!-- SEARCH RESULTS -->
+            <div class="clearfix search-result">
+                @foreach (var user in Model.Users)
+                {
+                    <h6><a href="/user/index/@user.Id">@user.Name</a></h6>
+                }
+            </div>
+        </div>
+    </div>
+    <p>&nbsp;</p>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h6 class="nomargin">
+                @Model.Albums.Count albums found
+            </h6>
+            <hr class="nomargin-bottom margin-top-10">
+            <!-- SEARCH RESULTS -->
+            <div class="clearfix search-result">
+                @foreach (var album in Model.Albums)
+                {
+                    <h6><a href="/album/index/@album.Id">@album.Title</a></h6>
+                }
+            </div>
+        </div>
+    </div>
+</div>

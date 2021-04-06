@@ -20,14 +20,11 @@ namespace UtilantInterviewTest.Controllers
             _photoAlbumApi = photoAlbumApi;
         }
 
-        [HttpGet]
+       
         public IActionResult Index(int pageNumber = 1, int pageSize = 10)
         {
-            var userData = _photoAlbumApi.GetAllUserInfo();
-            var page = userData.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
-            return View(page);
-
+            return View(_photoAlbumApi.GetAllUserInfo());
+            
             //return View(_photoAlbumApi.GetAllUserInfo().Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList());
         }
 
