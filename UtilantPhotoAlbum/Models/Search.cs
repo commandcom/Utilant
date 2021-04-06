@@ -26,11 +26,9 @@ namespace UtilantInterviewTest.Models
             SearchResults results = new();
 
             results.SearchString = searchString;
-            // for searching purposes
-            searchString = searchString.ToLower();
 
-            results.Users = photoAlbumApi.GetUsers().Where(u => u.Name.ToLower().StartsWith(searchString)).ToList();
-            results.Albums = photoAlbumApi.GetAlbums().Where(a => a.Title.ToLower().StartsWith(searchString)).ToList();
+            results.Users = photoAlbumApi.GetUsers().Where(u => u.Name.StartsWith(searchString, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            results.Albums = photoAlbumApi.GetAlbums().Where(a => a.Title.StartsWith(searchString, StringComparison.InvariantCultureIgnoreCase)).ToList();
             
             return results;
         }
